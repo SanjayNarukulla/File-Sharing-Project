@@ -4,20 +4,35 @@ import { uploadFile } from "./services/api";
 
 function App() {
   const [file, setFile] = useState("");
-
   const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false); // To manage loading state
+  const [error, setError] = useState(""); // To manage error state
 
   const fileInpuRef = useRef();
 
   useEffect(() => {
     const getImage = async () => {
       if (file) {
-        const data = new FormData();
-        data.append("name", file.name);
-        data.append("file", file);
+        setLoading(true); // Start loader
+        setError(""); // Reset error state
+        try {
+          const data = new FormData();
+          data.append("name", file.name);
+          data.append("file", file);
 
-        let response = await uploadFile(data);
-        setResult(response.path);
+          let response = await uploadFile(data);
+
+          if (response.error) {
+            // Handle backend-sent error
+            setError(response.error); // Display error message from backend
+          } else {
+            setResult(response.path); // Set file path if successful
+          }
+        } catch (err) {
+          setError("An unexpected error occurred. Please try again."); // Generic error handling
+        } finally {
+          setLoading(false); // Stop loader
+        }
       }
     };
     getImage();
@@ -27,7 +42,6 @@ function App() {
     fileInpuRef.current.click();
   };
 
-  console.log(file);
   return (
     <div className="app">
       <div className="filewave-container">
@@ -48,9 +62,16 @@ function App() {
           onChange={(e) => setFile(e.target.files[0])}
         />
 
-        <div>
-          <a href={result}>{result}</a>
-        </div>
+        {loading && <p className="loader">Uploading...</p>} {/* Loader */}
+        {error && <p className="error">{error}</p>} {/* Error message */}
+
+        {result && (
+          <div>
+            <a href={result} target="_blank" rel="noopener noreferrer">
+              {result}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
