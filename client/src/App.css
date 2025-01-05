@@ -61,3 +61,15 @@
 .upload-button:hover {
   background-color: #004085;
 }
+
+.loader {
+  color: #007bff;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
