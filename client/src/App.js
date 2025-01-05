@@ -29,7 +29,7 @@ function App() {
             setResult(response.path); // Set file path if successful
           }
         } catch (err) {
-          setError("An unexpected error occurred. Please try again."); // Generic error handling
+          setError("Only image files (JPEG, PNG, GIF) and PDFs are allowed!"); // Generic error handling
         } finally {
           setLoading(false); // Stop loader
         }
